@@ -1,0 +1,9 @@
+version: "3.0"
+services:
+
+  notebook:
+    build: notebook
+    ports:
+      - "8080:8080"
+
+  
