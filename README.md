@@ -23,4 +23,8 @@ src/test/resources/top2018.csv spotify
 
 
 ## References
-<https://github.com/holdenk/sparkProjectTemplate.g8>
+<https://spark.apache.org/docs/2.1.1/programming-guide.html>
+<https://spark.apache.org/docs/2.1.1/sql-programming-guide.html>
+<https://spark.apache.org/docs/2.1.1/ml-pipeline.html>
+<http://archive.ics.uci.edu/ml/datasets/Bank+Marketing>
+
