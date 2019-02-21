@@ -1,16 +1,8 @@
 
-
-
-1. visualize
-2. analyze
-3. model
-
-
-
 ## startup notebook
 
 ```
-./start.sh
+./start_notebook.sh
 ```
 <http://localhost:8080>
 
