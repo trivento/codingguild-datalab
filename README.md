@@ -1,3 +1,15 @@
+### test cases
+```
+# RDD
+test/scala/SparkRDDAnalysisTest.scala
+
+# DataFrame and DataSet
+test/scala/SparkDFDSAnalysisTest.scala
+
+# Machine learning
+test/scala/SparkMLibAnalysisTest.scala
+```
+
 
 ## startup notebook
 
