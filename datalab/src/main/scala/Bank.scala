@@ -25,7 +25,8 @@ case class Bank(age: Int,
 object Bank  extends StringTool {
   def apply(record: Array[String]): Bank = {
     val r = record.map(trimQuotes(_))
-    Bank(age = r(0).toInt,
+    Bank(
+      age = r(0).toInt,
       job = r(1),
       marital = r(2),
       education = r(3),
@@ -41,6 +42,6 @@ object Bank  extends StringTool {
       pdays = r(13).toInt,
       previous = r(14).toInt,
       poutcome = r(15),
-      yes = r(15))
+      yes = r(16))
   }
 }

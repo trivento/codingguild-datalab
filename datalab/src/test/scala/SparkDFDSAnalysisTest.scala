@@ -74,6 +74,8 @@ class SparkDFDSAnalysisTest extends FunSuite with BeforeAndAfter with DataLab {
       , Bank(59, "blue-collar", "married", "secondary", "no", 0, "yes", "no", "unknown", 5, "may", 226, 1, -1, 0, "unknown", "unknown")
     )
 
+    var i = 0;
+
     expected.foreach { it =>
       assert(bankDS.filter(it == _).first() == it)
     }
