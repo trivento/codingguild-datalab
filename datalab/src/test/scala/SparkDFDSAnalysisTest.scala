@@ -1,4 +1,5 @@
 import java.io.File
+import java.net.URL
 
 import org.apache.spark.sql.types.IntegerType
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
@@ -11,7 +12,7 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 class SparkDFDSAnalysisTest extends FunSuite with BeforeAndAfter with DataLab {
 
   // data sets
-  val url = "http://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip"
+  val url = ClassLoader.getSystemResource("bank.zip").toString
   val bankZip = "target/bank.zip"
   val dataDir = "target/data"
   val bankCsv = dataDir + "/" + "bank.csv"
@@ -66,16 +67,21 @@ class SparkDFDSAnalysisTest extends FunSuite with BeforeAndAfter with DataLab {
   }
 
   test("data quality: check some records") {
-    bankDS.foreach(println(_))
-    val expected = List(Bank(30, "unemployed", "married", "primary", "no", 1787, "no", "no", "cellular", 19, "oct", 79, 1, -1, 0, "unknown", "unknown")
-      , Bank(33, "services", "married", "secondary", "no", 4789, "yes", "yes", "cellular", 11, "may", 220, 1, 339, 4, "failure", "failure")
-      , Bank(35, "management", "single", "tertiary", "no", 1350, "yes", "no", "cellular", 16, "apr", 185, 1, 330, 1, "failure", "failure")
-      , Bank(30, "management", "married", "tertiary", "no", 1476, "yes", "yes", "unknown", 3, "jun", 199, 4, -1, 0, "unknown", "unknown")
-      , Bank(59, "blue-collar", "married", "secondary", "no", 0, "yes", "no", "unknown", 5, "may", 226, 1, -1, 0, "unknown", "unknown")
+//    bankDS.foreach(println(_))
+    val expected = List(
+      Bank(30, "unemployed", "married", "primary", "no", 1787, "no", "no", "cellular", 19, "oct", 79, 1, -1, 0, "unknown", "no"),
+       Bank(33, "services", "married", "secondary", "no", 4789, "yes", "yes", "cellular", 11, "may", 220, 1, 339, 4, "failure", "no"),
+      Bank(35, "management", "single", "tertiary", "no", 1350, "yes", "no", "cellular", 16, "apr", 185, 1, 330, 1, "failure", "no"),
+      Bank(30, "management", "married", "tertiary", "no", 1476, "yes", "yes", "unknown", 3, "jun", 199, 4, -1, 0, "unknown", "no"),
+      Bank(59, "blue-collar", "married", "secondary", "no", 0, "yes", "no", "unknown", 5, "may", 226, 1, -1, 0, "unknown", "no")
     )
 
-    expected.foreach { it =>
-      assert(bankDS.filter(it == _).first() == it)
+    bankDS.show(10)
+    for (it <- expected) {
+      val filtered = bankDS.filter(bank => it == bank)
+      filtered.show(5)
+      assert(!filtered.isEmpty, it)
+
     }
   }
 

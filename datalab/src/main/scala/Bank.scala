@@ -41,6 +41,6 @@ object Bank  extends StringTool {
       pdays = r(13).toInt,
       previous = r(14).toInt,
       poutcome = r(15),
-      yes = r(15))
+      yes = r(16))
   }
 }

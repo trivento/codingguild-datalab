@@ -9,8 +9,7 @@ class IntegrationToolTest extends FunSuite with IntegrationTool with BeforeAndAf
 
 
   test("bank.zip should contain three files") {
-    download("http://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
-      outputFilename = "target/data/bank.zip");
+    download(ClassLoader.getSystemResource("bank.zip").toString, outputFilename = "target/data/bank.zip")
     unzip(zipFile = "target/data/bank.zip", outputFolder = "target/data")
 
     val dir = "target/data"

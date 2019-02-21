@@ -11,7 +11,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 class SparkRDDAnalysisTest extends FunSuite with BeforeAndAfter with DataLab {
 
   // data sets
-  val url = "http://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip"
+  val url = ClassLoader.getSystemResource("bank.zip").toString
   val bankZip = "target/bank.zip"
   val dataDir = "target/data"
   val bankCsv = dataDir + "/" + "bank.csv"

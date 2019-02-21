@@ -1,11 +1,11 @@
 import java.io.File
 
-import org.apache.spark.ml.classification.LogisticRegression
+import org.apache.spark.ml.classification.{DecisionTreeClassifier, LogisticRegression}
 import org.apache.spark.sql.types.IntegerType
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 import org.scalatest.{BeforeAndAfter, FunSuite}
 import org.apache.spark.ml.linalg.{Vector, Vectors}
-
+import org.apache.spark.ml.feature._
 import org.apache.spark.sql.Row
 /*
  * https://spark.apache.org/docs/2.1.1/ml-pipeline.html
@@ -16,7 +16,7 @@ import org.apache.spark.sql.Row
 class SparkMLibAnalysisTest extends FunSuite with BeforeAndAfter with DataLab {
 
   // data sets
-  val url = "http://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip"
+  val url = ClassLoader.getSystemResource("bank.zip").toString
   val bankZip = "target/bank.zip"
   val dataDir = "target/data"
   val bankCsv = dataDir + "/" + "bank.csv"
@@ -57,7 +57,7 @@ class SparkMLibAnalysisTest extends FunSuite with BeforeAndAfter with DataLab {
 
   lazy val bankFullDF : DataFrame = sparkSession
     .read.options(Map("delimiter" -> ";", "header" -> "true"))
-    .csv(bankCsv)
+    .csv(bankFullCsv)
     .withColumnRenamed("default", "defaultCredit")
     .withColumnRenamed("y", "yes")
     .withColumn("age", 'age.cast(IntegerType))
@@ -69,17 +69,27 @@ class SparkMLibAnalysisTest extends FunSuite with BeforeAndAfter with DataLab {
     .withColumn("previous", 'previous.cast(IntegerType))
 
   test("train a model using, transform the full model to contain predictions") {
+    val formula = new RFormula()
+      .setFormula("yes ~ age + balance + duration")
+      .setFeaturesCol("features")
+      .setLabelCol("label")
+
+    val trainingData = formula.fit(bankTrainingDF).transform(bankTrainingDF)
+    trainingData.select("features", "label").show()
+
     val modelTrainer = new LogisticRegression()
-    modelTrainer.setLabelCol("yes")
-    modelTrainer.setFeaturesCol("age")
-    val model = modelTrainer.fit(bankTrainingDF)
+    val model = modelTrainer.fit(trainingData)
+
+    val testData = formula.fit(bankFullDF).transform(bankFullDF)
+
 
     // fails, because my Features needs to be a vector..??
-    model.transform(bankFullDF)
-//      .select("features", "label", "myProbability", "prediction")
-      .select()
-      .collect()
-      .foreach(println)
+    model.transform(testData)
+      .select("yes", "features", "label", "probability", "prediction")
+//      .select()
+      .show(1000)
+//      .collect()
+//      .foreach(println)
 //      .foreach { case Row(features: Vector, label: Double, prob: Vector, prediction: Double) =>
 //        println(s"($features, $label) -> prob=$prob, prediction=$prediction")
 //      }
