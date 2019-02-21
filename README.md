@@ -1,6 +1,6 @@
 ### test cases
 ```
-# RDD
+# Resilient Distributed Dataset
 test/scala/SparkRDDAnalysisTest.scala
 
 # DataFrame and DataSet
